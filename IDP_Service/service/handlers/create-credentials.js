@@ -1,6 +1,9 @@
 import express from "express";
 import argon from "argon2";
 import UUID from "pure-uuid";
+import UserModal from "../models/user";
+
+
 
 async function handleCreateCredentialsUsernamePassword(request, response) {
   if (typeof request.body.username !== "string" || request.body.username.length < 1) {
@@ -17,7 +20,12 @@ const credentialsKey = `credentials:${lowerCaseUsername}`;
 const store = request.app.locals.store;
 // Ensure it doesn't already exist
 // Use catch to return falsy if the key doesn't exist
-if (await store.get(credentialsKey).catch(() => undefined)) {
+
+
+//const oldUser = await UserModal.findOne({ email });
+console.log( new Buffer.from(await store.get(credentialsKey), 'utf8').toString())
+
+if (await store.get(credentialsKey).catch((e) => undefined)) {
       return response.sendStatus(409); // Conflict 
 }
 // Create identifier scoped to our host
@@ -27,6 +35,7 @@ const identity = {
   primaryUsername: username
 };
 // Store our identity
+
 await store.put(`identity:${uuid}`, JSON.stringify(identity));
 // Store our new credentials
 await store.put(credentialsKey, JSON.stringify({
