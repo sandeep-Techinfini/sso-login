@@ -3,6 +3,7 @@ import crypto from "crypto";
 import argon from "argon2";
 import JSONWebToken from "jsonwebtoken";
 import ms from "ms";
+import UUID from "pure-uuid"
 
 async function getIdentityForUsernamePasswordCredentials(request, response) {
   const store = request.app.locals.store;
@@ -12,7 +13,8 @@ async function getIdentityForUsernamePasswordCredentials(request, response) {
   const passwordInformation = await store
     .get(credentialsKey)
     .catch(() => undefined);
-    
+    let keys=new Buffer.from(passwordInformation, 'utf8').toString()
+    console.log(JSON.parse(keys).hash)
   if (
     typeof request.body.username !== "string" ||
     request.body.username.length < 1
@@ -27,19 +29,23 @@ async function getIdentityForUsernamePasswordCredentials(request, response) {
   ) {
     return response.sendStatus(400);
   }
+
   // We're going to validate our password here and then return the associated identity
-  if (!(passwordInformation && passwordInformation.hash && passwordInformation.identity)) {
-    response.sendStatus(401);
+  if (!(JSON.parse(passwordInformation) && JSON.parse(passwordInformation).hash && JSON.parse(passwordInformation).identity)) {
+    
+    response.sendStatus(402);
  // Already handled
  return undefined;
 }
-const match = await argon.verify(passwordInformation.hash, request.body.password);
+const match = await argon.verify(JSON.parse(passwordInformation).hash, request.body.password);
+console.log(match)
 if (!match) {
    response.sendStatus(401);
  // Already handled
  return undefined;
 }
-return passwordInformation.identity;
+
+return JSON.parse(passwordInformation).identity;
 }
 
 async function getIdentityForCredentials(request, response) {
@@ -75,6 +81,7 @@ async function createKeyPair() {
 async function generateBearerTokenCredentials(request, response, identity) {
   // We're going to generate our token here
   const { publicKey, privateKey } = await createKeyPair();
+  console.log("----",await createKeyPair())
 const expiryInMS = ms("1 day");
 const expiresAtInMS = Date.now() + expiryInMS;
 const payload = {
@@ -102,14 +109,14 @@ await store.put(`jwt-key:${keyid}`, JSON.stringify({
   algorithm,
   publicKey
 }));
-// Mark our value for expiry:
-await new Promise(
-  (resolve, reject) => request.app.locals.ttl.ttl(
-    `jwt-key:${keyid}`, 
-    expiryInMS,
-        (error) => error ? reject(error) : resolve()
-  )
-);
+// Mark our value for expiry:********************************************************
+// await new Promise(
+//   (resolve, reject) => request.app.locals.ttl.ttl(
+//     `jwt-key:${keyid}`, 
+//     expiryInMS,
+//         (error) => error ? reject(error) : resolve()
+//   )
+// );
 response.json({
     token,
   tokenType: "bearer",
@@ -132,6 +139,7 @@ function handleExchangeCredentialsRoute(request, response, next) {
   }
   getIdentityForCredentials(request, response)
     .then((identity) => {
+      console.log("*",identity)
       if (!identity) {
         // Already handled
         return;

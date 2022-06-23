@@ -4,14 +4,16 @@ import ttl from "level-ttl";
 import mongoose from "mongoose";
 
 import createCredentialsHandler from "./handlers/create-credentials";
-//import exchangeCredentialsHandler from "./handlers/exchange-credentials";
+import exchangeCredentialsHandler from "./handlers/exchange-credentials";
+import bearer from "./middleware/verify-bearer.js";
 
 const app = express();
 app.locals.store = new Level("./store",{ valueEncoding: 'view' });
 //app.locals.ttl = ttl(app.locals.store);
 
 app.post("/create-credentials", createCredentialsHandler);
-//app.post("/exchange-credentials", exchangeCredentialsHandler);
+app.post("/exchange-credentials", exchangeCredentialsHandler);
+app.get("/check-authentication", bearer, (request, response) => response.send("`You're authenticated!"));
 
 
 const CONNECTION_URL = "mongodb+srv://techinfini:techinfini123@cluster0.q2djkwz.mongodb.net/IDP_Service=true&w=majority";
