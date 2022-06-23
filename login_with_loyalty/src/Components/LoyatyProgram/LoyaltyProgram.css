@@ -1,0 +1,17 @@
+.loyalty-warapper {
+    width: 50%;
+    margin: 0 auto;
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #888888;
+    margin-top: 80px;
+}
+
+.btn-wrapper {
+    display: flex;
+    padding: 10px;
+    margin: 10p;
+}
+button.btn.btn-primary {
+    margin-right: 5px;
+}
