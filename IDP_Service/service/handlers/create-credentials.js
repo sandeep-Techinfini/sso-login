@@ -1,7 +1,7 @@
 import express from "express";
 import argon from "argon2";
 import UUID from "pure-uuid";
-import UserModal from "../models/user";
+import identitySchema from "../models/user";
 
 
 
@@ -23,10 +23,12 @@ const store = request.app.locals.store;
 
 
 //const oldUser = await UserModal.findOne({ email });
-console.log( new Buffer.from(await store.get(credentialsKey), 'utf8').toString())
+//console.log( new Buffer.from(await store.get(credentialsKey).catch((e) => undefined), 'utf8').toString())
 
 if (await store.get(credentialsKey).catch((e) => undefined)) {
+      console.log("*****Key");
       return response.sendStatus(409); // Conflict 
+
 }
 // Create identifier scoped to our host
 const uuid = new UUID(4).format();
@@ -36,6 +38,8 @@ const identity = {
 };
 // Store our identity
 
+// await UserModal.create(`identity:${uuid}`,JSON.stringify(identity));
+await identitySchema.create({id:`identity:${uuid}`,email:username ,password:hash,name:username});
 await store.put(`identity:${uuid}`, JSON.stringify(identity));
 // Store our new credentials
 await store.put(credentialsKey, JSON.stringify({
