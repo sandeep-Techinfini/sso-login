@@ -4,8 +4,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import decode from 'jwt-decode';
 import "./Navbar.css"
-import memoriesLogo from '../../images/memoriesLogo.png';
-import memoriesText from '../../images/memoriesText.png';
+
 import logo from '../../images/logo.png';
 import * as actionType from '../../constants/actionTypes';
 import useStyles from './styles';
@@ -45,10 +44,10 @@ const Navbar = () => {
         {/* <img className={classes.image} src={memoriesLogo} alt="icon" height="40px" /> */}
       </Link>
       <Toolbar className={classes.toolbar}>
-        {user?.user ? (
+        {user?.user || user?.result ? (
           <div className={classes.profile}>
-            <Avatar className={classes.purple} alt={user?.user} src={user?.result}>{user?.user.charAt(0)}</Avatar>
-            <Typography className={classes.userName} variant="h6">{user?.user.split("@")[0]}</Typography>
+            <Avatar className={classes.purple} alt={user.user ? user?.user : user?.result.name} src={user.user ? user?.result : user?.result.name}>{user.user ? user?.user.charAt(0) : user?.result.name.charAt(0)}</Avatar>
+            <Typography className={classes.userName} variant="h6">{user.user ? user?.user.split("@")[0] : user?.result.name}</Typography>
             <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Logout</Button>
           </div>
         ) : (

@@ -43,6 +43,7 @@ const SignUp = () => {
   };
 
   const googleSuccess = async (res) => {
+    console.log("google sign",res)
     const result = res?.profileObj;
     const token = res?.tokenId;
 

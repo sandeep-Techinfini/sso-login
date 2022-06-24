@@ -2,6 +2,7 @@ import express from "express";
 import argon from "argon2";
 import UUID from "pure-uuid";
 import identitySchema from "../models/user";
+import mongoose from "mongoose"
 
 
 
@@ -22,7 +23,11 @@ const credentialsKey = `credentials:${lowerCaseUsername}`;
 const store = request.app.locals.store;
 // Ensure it doesn't already exist
 // Use catch to return falsy if the key doesn't exist
+var Schema = mongoose.Schema
+var Tasks = new Schema({vmProfile:String}, { strict: false });
+mongoose.model('UserIdentity',Tasks)
 
+var UserIdentity = mongoose.model('UserIdentity',Tasks)
 
 //const oldUser = await UserModal.findOne({ email });
 //console.log( new Buffer.from(await store.get(credentialsKey).catch((e) => undefined), 'utf8').toString())
@@ -41,6 +46,11 @@ const identity = {
 // Store our identity
 
 // await UserModal.create(`identity:${uuid}`,JSON.stringify(identity));
+//var task = new UserIdentity({[`identity:${uuid}`]:{email:username ,password:hash,name:username}});
+// task.save(function(err)
+// {
+//     if(err) throw err;
+// })
 await identitySchema.create({id:`identity:${uuid}`,email:username ,password:hash,name:username});
 await store.put(`identity:${uuid}`, JSON.stringify(identity));
 // Store our new credentials

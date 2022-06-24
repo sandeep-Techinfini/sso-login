@@ -18,7 +18,8 @@ const Post = ({ post, setCurrentId }) => {
   const history = useHistory();
   const classes = useStyles();
 
-  const userId = user?.result.googleId || user?.result?._id;
+  //const userId = user?.result.googleId || user?.id;
+  const userId = user?.id;
   const hasLikedPost = post.likes.find((like) => like === userId);
 
   const handleLike = async () => {
