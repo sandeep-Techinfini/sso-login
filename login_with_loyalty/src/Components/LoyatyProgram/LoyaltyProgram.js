@@ -5,7 +5,7 @@ const LoyaltyProgram = () => {
   return (
     <div className="loyalty-warapper">
       <h1> Loyalty Program </h1>
-      <Link to="/login">
+      <Link to="/loyalty-login">
         <button type="submit" className="btn btn-primary">
           Login
         </button>
