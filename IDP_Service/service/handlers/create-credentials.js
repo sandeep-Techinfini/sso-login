@@ -6,15 +6,17 @@ import identitySchema from "../models/user";
 
 
 async function handleCreateCredentialsUsernamePassword(request, response) {
-  if (typeof request.body.username !== "string" || request.body.username.length < 1) {
-      return response.sendStatus(400); 
+  console.log("detais",request.body)
+  if (typeof request.body.email !== "string" || request.body.email.length < 1) {
+      return response.sendStatus(401); 
   }
   if (typeof request.body.password !== "string" || request.body.password.length < 8) {
-      return response.sendStatus(400); 
+      return response.sendStatus(401); 
   }
      // We're going to create our credentials here!
+
 const hash = await argon.hash(request.body.password);
-const username = request.body.username.trim();
+const username = request.body.email.trim();
 const lowerCaseUsername = username.toLowerCase();
 const credentialsKey = `credentials:${lowerCaseUsername}`;
 const store = request.app.locals.store;

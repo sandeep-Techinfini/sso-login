@@ -30,7 +30,7 @@ const Form = ({ currentId, setCurrentId }) => {
     e.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
+      dispatch(createPost({ ...postData, name: user?.user }, history));
       clear();
     } else {
       dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
@@ -38,7 +38,7 @@ const Form = ({ currentId, setCurrentId }) => {
     }
   };
 
-  if (!user?.result?.name) {
+  if (!user?.user) {
     return (
       <Paper className={classes.paper} elevation={6}>
         <Typography variant="h6" align="center">

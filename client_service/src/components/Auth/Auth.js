@@ -11,7 +11,7 @@ import { AUTH } from '../../constants/actionTypes';
 import useStyles from './styles';
 import Input from './Input';
 import "./Auth.css"
-const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '',type: "username-password" };
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
@@ -33,8 +33,11 @@ const SignUp = () => {
     e.preventDefault();
 
     if (isSignup) {
+      setForm()
+      console.log("##",form, "*********",history)
       dispatch(signup(form, history));
     } else {
+      console.log("@@",form, history)
       dispatch(signin(form, history));
     }
   };

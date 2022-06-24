@@ -7,17 +7,18 @@ import UUID from "pure-uuid"
 
 async function getIdentityForUsernamePasswordCredentials(request, response) {
   const store = request.app.locals.store;
-  const username = request.body.username.trim();
+  const username = request.body.email.trim();
   const lowerCaseUsername = username.toLowerCase();
   const credentialsKey = `credentials:${lowerCaseUsername}`;
   const passwordInformation = await store
     .get(credentialsKey)
     .catch(() => undefined);
+    console.log("===",passwordInformation)
     let keys=new Buffer.from(passwordInformation, 'utf8').toString()
     console.log(JSON.parse(keys).hash)
   if (
-    typeof request.body.username !== "string" ||
-    request.body.username.length < 1
+    typeof request.body.email !== "string" ||
+    request.body.email.length < 1
   ) {
     return response.sendStatus(400);
   }
@@ -81,11 +82,12 @@ async function createKeyPair() {
 async function generateBearerTokenCredentials(request, response, identity) {
   // We're going to generate our token here
   const { publicKey, privateKey } = await createKeyPair();
-  console.log("----",await createKeyPair())
+  console.log("----",request.body.email)
 const expiryInMS = ms("1 day");
 const expiresAtInMS = Date.now() + expiryInMS;
 const payload = {
     sub: identity,
+    user:request.body.email,
   // exp is in **seconds**, not milliseconds
   // Floor so that we have an integer
   exp: Math.floor(expiresAtInMS / 1000)

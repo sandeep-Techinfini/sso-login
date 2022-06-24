@@ -20,5 +20,8 @@ export const comment = (value, id) => API.post(`/posts/${id}/commentPost`, { val
 export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
 export const deletePost = (id) => API.delete(`/posts/${id}`);
 
-export const signIn = (formData) => API.post('/user/signin', formData);
-export const signUp = (formData) => API.post('/user/signup', formData);
+export const signIn = (formData) => axios.post('http://localhost:3030/exchange-credentials', formData);
+//export const signUp = (formData) => API.post('/user/signup', formData);
+// export const signUp = (formData) => axios.post('http://localhost:3030/exchange-credentials', formData);
+export const signUp = (formData) => axios.post('http://localhost:3030/create-credentials', formData);
+export const varify = (formData) => axios.get('http://localhost:3030/check-authentication', null,formData);
