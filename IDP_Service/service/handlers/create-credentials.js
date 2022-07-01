@@ -46,8 +46,8 @@ const identity = {
 // Store our identity
 
 // await UserModal.create(`identity:${uuid}`,JSON.stringify(identity));
-//var task = new UserIdentity({[`identity:${uuid}`]:{email:username ,password:hash,name:username}});
-// task.save(function(err)
+// var task1 = new UserIdentity({[`identity:${uuid}`]:{email:username ,password:hash,name:username}});
+// task1.save(function(err)
 // {
 //     if(err) throw err;
 // })

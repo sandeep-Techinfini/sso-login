@@ -43,7 +43,7 @@ const LoyaltyRegister = () => {
             </Link>
           </div>
         </div>
-        <Link to="/">Already registered please login</Link>
+        <Link to="/login">Already registered please login</Link>
       </form>
     </div>
   );
